@@ -20,3 +20,7 @@ Route::get('/mail', function () {
     Mail::to('moonyoin@gmail.com')->send(new WelcomeMail($name));
 
 });
+
+Route::get('/welcome-mail', function () {
+    return view('mail.welcome-mail');
+});
