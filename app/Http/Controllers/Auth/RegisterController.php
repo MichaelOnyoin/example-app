@@ -34,13 +34,24 @@ class RegisterController extends Controller
 
         event(new Registered($user));
 
+        Auth::login($user);
+       // Send email verification link
+       auth()->user()->sendEmailVerificationNotification();
 
-        Mail::to($user->email)->send(new WelcomeMail($user->name)); // Send a welcome email using Mailable
-       // $user->sendEmailVerificationNotification(new WelcomeMail($user->name)); // Send email verification notification
-       //Auth::login($user);
-        $request->user()->sendEmailVerificationNotification();
+        // Ensure the user is authenticated
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+        // Send the welcome email
+        $name = auth()->user()->name ?? 'User';
 
-        return response()->json($user, 200);
+        Mail::to(auth()->user()->email)->send(new WelcomeMail($name));
+        return 'Welcome email sent successfully!';
+
+        return response()->json([
+        'message' => 'Registration successful! Please check your email for a verification link.',
+        'user' => $user,
+        ], 201);
 
         //return redirect('http://localhost:3000/login')->with('success', 'Registration successful!');
     }
