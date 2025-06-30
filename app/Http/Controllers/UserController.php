@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -22,6 +23,17 @@ class UserController extends Controller
         $user->update($request->only('name', 'email'));
         return response()->json($user);
     }
+
+    public function updateUserById(Request $request, $id): JsonResponse
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        $user->update($request->only('name', 'email'));
+        return response()->json($user);
+    }
+
     public function destroy(Request $request): Response
     {
         $user = $request->user();
@@ -47,7 +59,7 @@ class UserController extends Controller
         return response()->noContent();
     }
     
-    public function getUserById($id): Response
+    public function getUserById($id): JsonResponse
     {
         $user = User::find($id);
         if (!$user) {
@@ -60,14 +72,15 @@ class UserController extends Controller
         $users = User::all();
         return response()->json($users);
     }
-    public function deleteUserById($id): Response
+    public function deleteUserById($id): JsonResponse
     {
         $user = User::find($id);
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-        $user->delete();
-        return response()->noContent();
+       $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully']);
     }
     //identify user by email and password
     public function getUserByEmailAndPassword(Request $request): JsonResponse

@@ -9,6 +9,10 @@ use Illuminate\Auth\Events\Registered;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail ; // Import the Mailable class
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class RegisterController extends Controller
 {
@@ -36,17 +40,19 @@ class RegisterController extends Controller
 
         Auth::login($user);
        // Send email verification link
-       auth()->user()->sendEmailVerificationNotification();
+        
 
         // Ensure the user is authenticated
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        }
+        // if (!auth()->check()) {
+        //     return redirect()->route('login');
+        // }
         // Send the welcome email
         $name = auth()->user()->name ?? 'User';
 
         Mail::to(auth()->user()->email)->send(new WelcomeMail($name));
-        return 'Welcome email sent successfully!';
+        auth()->user()->sendEmailVerificationNotification();
+        // Log the email sending event
+        Log::info("Welcome email sent to: " . auth()->user()->email);
 
         return response()->json([
         'message' => 'Registration successful! Please check your email for a verification link.',
