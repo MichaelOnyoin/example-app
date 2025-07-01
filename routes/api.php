@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ProductController;
 
 
 Route::get('/user', function (Request $request) {
@@ -59,3 +60,11 @@ Route::middleware('auth')->group(function () {
     // Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
     //     ->name('logout');
 });
+
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/{id}', [ProductController::class, 'show']);
+Route::post('/products', [ProductController::class, 'store']);
+Route::put('/products/{id}', [ProductController::class, 'update']);
+Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+Route::get('/products/search', [ProductController::class, 'search']);
+Route::patch('/products', [ProductController::class, 'batch']);
