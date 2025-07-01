@@ -25,25 +25,23 @@ Route::delete('/users/{id}', [UserController::class, 'deleteUserById']);
 Route::get('/users/{id}', [UserController::class, 'getUserById']);
 Route::put('/users/{id}', [UserController::class, 'updateUserById']);
 
-        // ->middleware('auth:sanctum')
-        // ->name('users.index');
-//Route::post('/login', [UserController::class, 'getUserByEmailAndPassword']);
-Route::get('login', [AuthenticatedSessionController::class, 'create'])
+Route::post('register', [RegisteredUserController::class, 'register']);
+
+Route::post('login', [AuthenticatedSessionController::class, 'loginApi'])
         ->name('login');
 
-Route::post('login', [AuthenticatedSessionController::class, 'store']);
-Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+   //Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('logout', [AuthenticatedSessionController::class, 'logoutApi'])
         ->name('logout');
 
-//Route::post('register', [RegisteredUserController::class, 'store']);
-Route::post('register', [RegisteredUserController::class, 'register']);
 
 
 Route::middleware('auth')->group(function () {
-   Route::get('verify-email', EmailVerificationPromptController::class)
+
+    Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
         
-   Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
+    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
@@ -58,6 +56,6 @@ Route::middleware('auth')->group(function () {
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
+    // Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+    //     ->name('logout');
 });
