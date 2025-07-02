@@ -32,8 +32,10 @@ Route::post('login', [AuthenticatedSessionController::class, 'loginApi'])
         ->name('login');
 
    //Route::post('login', [AuthenticatedSessionController::class, 'store']);
-    Route::post('logout', [AuthenticatedSessionController::class, 'logoutApi'])
+Route::post('logout', [AuthenticatedSessionController::class, 'logoutApi'])
         ->name('logout');
+
+Route::post('products/search', [ProductController::class, 'search']);
 
 
 

@@ -43,17 +43,21 @@ class AuthenticatedSessionController extends Controller
     public function loginApi(LoginRequest $request): JsonResponse
     {
         $request->authenticate();
-        //$request->session()->regenerate();
+        $session = $request->session()->regenerate();
         // Store user ID in session (if needed)
         // This is not necessary for API, but you can store it if needed
         session()->put('user_id', Auth::id());
 
         $user = Auth::user();
+        // Optionally, you can store the user ID in the session
+        // This is not necessary for API, but you can store it if needed
+        //session()->put('user_id', $user->id)= $session;
         //$request->session()->store('user_id', $user->id);
 
         return response()->json([
             'message' => 'Login successful',
             'user' => $user,
+            'session' => $session, // Include session data if needed
         ]);
     }
 

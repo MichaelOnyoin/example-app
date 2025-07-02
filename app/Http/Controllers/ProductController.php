@@ -127,4 +127,21 @@ class ProductController extends Controller
         // Return a success response
         return response()->json(['message' => 'Product deleted successfully']);
     }
+
+    public function search(Request $request)
+    {
+        // Validate the search query
+        $request->validate([
+            'query' => 'required|string|max:255',
+        ]);
+
+        // Perform the search
+        $query = $request->input('query');
+        $products = Product::where('title', 'like', "%{$query}%")
+            ->orWhere('description', 'like', "%{$query}%")
+            ->get();
+
+        // Return the search results as a JSON response
+        return response()->json($products);
+    }
 }
