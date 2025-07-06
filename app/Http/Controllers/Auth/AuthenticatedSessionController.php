@@ -96,4 +96,22 @@ class AuthenticatedSessionController extends Controller
             'message' => 'Logout successful',
         ]);
     }
+
+    public function sessionApi(Request $request, $id): JsonResponse
+    {
+        $id = Auth::id();
+        $user = Auth::user();
+        //$user->id = $id;
+        $session = $request->session()->where('user_id', $user->id)->first();
+        if (!$session) {
+            return response()->json(['error' => 'Session not found'], 404);
+        }
+        
+        return response()->json([
+            'message' => 'Session retrieved successfully',
+            'session_id' => $sessionId,
+            'session_data' => $session,
+            'user' => $user,
+        ]);
+    }
 }

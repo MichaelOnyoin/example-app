@@ -144,4 +144,38 @@ class ProductController extends Controller
         // Return the search results as a JSON response
         return response()->json($products);
     }
+
+    public function getCategories(Request $request)
+    {
+        // Fetch all products from the database
+        $request->validate([
+            'query' => 'required|string|max:255',
+        ]);
+
+        // Perform the search
+        $query = $request->input('query');
+        $products = Product::where('category', 'like', "%{$query}%")
+            ->orWhere('description', 'like', "%{$query}%")
+            ->get();
+
+        // Return the categories as a JSON response
+        return response()->json($products);
+    }
+
+    public function getBrands(Request $request)
+    {
+        // Fetch all products from the database
+        $request->validate([
+            'query' => 'required|string|max:255',
+        ]);
+
+        // Perform the search
+        $query = $request->input('query');
+        $products = Product::where('brand', 'like', "%{$query}%")
+            ->orWhere('description', 'like', "%{$query}%")
+            ->get();
+
+        // Return the brands as a JSON response
+        return response()->json($products);
+    }
 }

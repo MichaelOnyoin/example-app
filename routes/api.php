@@ -35,7 +35,13 @@ Route::post('login', [AuthenticatedSessionController::class, 'loginApi'])
 Route::post('logout', [AuthenticatedSessionController::class, 'logoutApi'])
         ->name('logout');
 
-Route::post('products/search', [ProductController::class, 'search']);
+Route::get('products/search', [ProductController::class, 'search']);
+
+Route::get('products', [ProductController::class, 'index'])
+        ->name('products.index');
+
+Route::get('sessions/{id}', [AuthenticatedSessionController::class, 'sessionApi'])
+        ->name('sessions.show');
 
 
 
@@ -69,4 +75,6 @@ Route::post('/products', [ProductController::class, 'store']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 Route::get('/products/search', [ProductController::class, 'search']);
+Route::get('/products/category', [ProductController::class, 'getCategories']);
+Route::get('/products/brand', [ProductController::class, 'getBrands']);
 Route::patch('/products', [ProductController::class, 'batch']);
