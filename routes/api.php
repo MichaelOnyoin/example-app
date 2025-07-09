@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProductController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 Route::get('/user', function (Request $request) {
@@ -42,14 +43,20 @@ Route::get('products', [ProductController::class, 'index'])
 
 Route::get('sessions/{id}', [AuthenticatedSessionController::class, 'sessionApi'])
         ->name('sessions.show');
+Route::delete('sessions/{id}', [AuthenticatedSessionController::class, 'destroyApi']);
+//Customized email verification route
 
-
+// Route::get('email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+//         $request->fulfill();
+//         return response()->json(['message' => 'Email verified!']);
+//     })->middleware(['signed'])->name('verification.verify');
 
 Route::middleware('auth')->group(function () {
+    
 
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
-        
+
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
@@ -65,8 +72,8 @@ Route::middleware('auth')->group(function () {
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
-    // Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-    //     ->name('logout');
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
 });
 
 Route::get('/products', [ProductController::class, 'index']);

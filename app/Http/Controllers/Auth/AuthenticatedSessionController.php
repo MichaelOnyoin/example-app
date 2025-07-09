@@ -49,10 +49,9 @@ class AuthenticatedSessionController extends Controller
         session()->put('user_id', Auth::id());
 
         $user = Auth::user();
-        // Optionally, you can store the user ID in the session
-        // This is not necessary for API, but you can store it if needed
-        //session()->put('user_id', $user->id)= $session;
-        //$request->session()->store('user_id', $user->id);
+        if (!$user) {
+            return response()->json(['error' => 'Wrong user credentials'], 401);
+        }
 
         return response()->json([
             'message' => 'Login successful',
@@ -105,6 +104,10 @@ class AuthenticatedSessionController extends Controller
         $session = $request->session()->where('user_id', $user->id)->first();
         if (!$session) {
             return response()->json(['error' => 'Session not found'], 404);
+        }
+
+        if(!$user) {
+            return response()->json(['error' => 'Wrong user credentials'], 401);
         }
         
         return response()->json([

@@ -10,12 +10,17 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Notifications\VerifyApiEmail;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
     use HasApiTokens;
+    /**
+     * Send the email verification notification.
+     */
+   
 
     /**
      * The attributes that are mass assignable.
@@ -38,6 +43,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
     ];
 
+
     /**
      * Get the attributes that should be cast.
      *
@@ -50,4 +56,18 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the user's roles.
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+    } 
+
+    // public function sendEmailVerificationNotification(): void
+    // {
+    //     $this->notify(new VerifyApiEmail());
+    // }
+    
 }

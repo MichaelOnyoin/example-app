@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+// use Illuminate\Validation\ValidationException;
 // use Inertia\Inertia;
 // use Inertia\Response;
 
@@ -68,6 +69,11 @@ class RegisteredUserController extends Controller
         // You can use the following line if you want to log in the user immediately after registration
         Auth::login($user);
         // Optionally, you can send a welcome email or perform other actions here
+        // Send verification email
+        //$user->sendEmailVerificationNotification();
+        // Send email verification link
+        //auth()->user()->sendEmailVerificationNotification();
+
         // Ensure the user is authenticated
         return response()->json([
         'message' => 'Registration successful! Please check your email for a verification link.',
